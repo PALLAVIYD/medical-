@@ -17,7 +17,7 @@
     <link href="register.css" rel="stylesheet"/>
     
 </head>
-<body>
+body>
     <nav class="navbar navbar-expand-lg header-light bg-white disable-fixed">
         <div class="container-fluid">
             <div class="col-auto col-lg-2 me-lg-0 me-auto">
@@ -64,34 +64,30 @@
             </div>
         </div>
     </nav>
-<!-- Registration Section -->
+
+
+<!-- Login Section -->
 <section class="bg-image">
     <div class="bg-light-turquoise-blue border-radius-8px p-6 overflow-hidden position-relative">
         <div class="container">
             <div class="row mb-3">
                 <div class="col text-center">
-                    <h2 class="fw-800 text-dark-gray ls-minus-2px">Register</h2>
+                    <h2 class="fw-800 text-dark-gray ls-minus-2px">Login</h2>
                 </div>
             </div>
-            <form action="email-templates/registration-form.php" method="post" class="row contact-form-style-02">
-                <div class="col-md-6 mb-30px">
-                    <input class="form-control required" type="text" name="name" placeholder="Full Name*" required />
-                </div>
+            <form id="loginForm" class="row contact-form-style-02">
                 <div class="col-md-6 mb-30px">
                     <input class="form-control required" type="email" name="email" placeholder="Email*" required />
                 </div>
                 <div class="col-md-6 mb-30px">
                     <input class="form-control required" type="password" name="password" placeholder="Password*" required />
                 </div>
-                <div class="col-md-6 mb-30px">
-                    <input class="form-control required" type="password" name="confirm_password" placeholder="Confirm Password*" required />
-                </div>
                 <div class="col-12 text-center">
                     <button class="btn btn-base-color" type="submit">
-                        <span><i class="bi bi-person-plus"></i> Register</span>
+                        <span><i class="bi bi-box-arrow-in-right"></i> Login</span>
                     </button>
                 </div>
-                <a href="login.html" class="text-center mt-3">Already have an account? Login now</a>
+                <a href="register.html" class="text-center mt-3">Don't have an account? Register now</a>
             </form>
         </div>
     </div>
@@ -126,41 +122,36 @@
     </div>
 </footer>
 <script>
-    // Add an event listener to the form to handle submission
-    document.querySelector("form").addEventListener("submit", async function (event) {
-        event.preventDefault(); // Prevent the form from submitting the traditional way
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            const email = event.target.email.value;
+            const password = event.target.password.value;
 
-        // Collect form data
-        const formData = new FormData(event.target);
-        const data = {
-            username: formData.get("name"),
-            password: formData.get("password"),
-            email: formData.get("email"),
-        };
+            try {
+                const response = await fetch("http://127.0.0.1:8000/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-        // Send a POST request to the FastAPI backend
-        try {
-            const response = await fetch("http://localhost:8000/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                alert("Registration successful!"); // Notify user on success
-                window.location.href = "login.html"; // Redirect to login page
-            } else {
-                const errorData = await response.json();
-                alert("Error: " + errorData.detail); // Display error from backend
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Optionally redirect to dashboard or another page
+                    window.location.href = "/mood.html";
+                } else {
+                    // Display error message
+                    document.getElementById("loginMessage").textContent = data.detail || "Login failed. Please try again.";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("loginMessage").textContent = "An error occurred. Please try again later.";
             }
-        } catch (error) {
-            alert("An error occurred: " + error.message); // Handle network errors
-        }
-    });
-</script>
+        });
+    </script>
 
 </body>
 </html>

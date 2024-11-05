@@ -6,13 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link crossorigin href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
-
     <link href="css/vendors.min.css" rel="stylesheet"/>
     <link href="css/icon.min.css" rel="stylesheet"/>
     <link href="css/style.min.css" rel="stylesheet"/>
     <link href="css/responsive.min.css" rel="stylesheet"/>
     <link href="demos/medical/medical.css" rel="stylesheet"/>
-
     <title>Mental Health Support Chatbot</title>
 
     <style>
@@ -129,66 +127,41 @@
     </div>
 
     <script>
-        async function getMistralResponse(input) {
-            try {
-                const response = await fetch('YOUR_MISTRAL_API_ENDPOINT', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Include any required authentication headers here
-                    },
-                    body: JSON.stringify({
-                        model: "mistral-large-latest",
-                        messages: [
-                            { role: "system", content: "Act as a supportive mental health chatbot. Respond with empathy and understanding, guiding users towards positive thinking and self-care." },
-                            { role: "user", content: input }
-                        ],
-                    }),
-                });
+        async function talk() {
+            const userInput = document.getElementById("userBox").value;
+            const chatLog = document.getElementById("chatLog");
+            const userMessage = `User: ${userInput}`;
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                return Hello! Here’s my response:\n\n${data.choices[0].message.content}\n\nRemember, it’s always okay to reach out for help!;
-            } catch (error) {
-                console.error("Error getting Mistral response:", error);
-                return "I’m here for you. If there's an issue, please feel free to share your thoughts!";
-            }
-        }
-
-        function talk() {
-            var userMessage = document.getElementById("userBox").value.toLowerCase();
-            var chatLog = document.getElementById("chatLog");
-
-            // Predefined responses
-            var responses = {
-                "i am feeling sad": "I'm so sorry you're feeling this way. Do you want to talk more about what's been on your mind?",
-                "i feel alone": "I'm here for you. It’s okay to feel this way. You're not alone.",
-                "i feel hopeless": "It sounds really hard. But please remember, things can get better, even when they seem impossible right now.",
-                "i don't want to live": "I'm really sorry you're feeling this way, and it’s important to talk to someone who can help. Do you have someone you trust to reach out to?",
-                "thank you": "I'm glad I can be here for you. You deserve to feel supported.",
-                "i need help": "It's brave of you to ask for help. Talking to someone you trust or a mental health professional can make a big difference.",
-                "i don't know what to do": "It's okay to not have all the answers right now. Taking small steps, like sharing your feelings, is already a good start."
-            };
-
-            var defaultResponse = "I'm here with you. It’s okay to express how you're feeling.";
-            var botMessage = responses[userMessage] || defaultResponse;
-
-            // Update chat log with the bot's message
-            chatLog.innerHTML = botMessage;
+            // Display the user message
+            chatLog.innerHTML += `<br>${userMessage}`;
 
             // Clear the input box
             document.getElementById("userBox").value = '';
 
-            // If the user message isn't recognized, call the Mistral API
-            if (!responses[userMessage]) {
-                getMistralResponse(userMessage).then(response => {
-                    chatLog.innerHTML = response;
+            try {
+                const response = await fetch("http://127.0.0.1:8000/chatbot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({ prompt: userInput })
                 });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Display the bot's response
+                    const botMessage = `Bot: ${data.message}`;
+                    chatLog.innerHTML += `<br>${botMessage}`;
+                } else {
+                    // Handle errors from the server
+                    chatLog.innerHTML += `<br>Error: ${data.detail || "Something went wrong."}`;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                chatLog.innerHTML += "<br>Error: Unable to connect to the chatbot service.";
             }
         }
     </script>
 </body>
-</html> 
+</html>
