@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link crossorigin href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+
+    <link href="css/vendors.min.css" rel="stylesheet"/>
+    <link href="css/icon.min.css" rel="stylesheet"/>
+    <link href="css/style.min.css" rel="stylesheet"/>
+    <link href="css/responsive.min.css" rel="stylesheet"/>
+    <link href="demos/medical/medical.css" rel="stylesheet"/>
+
+    <title>Mental Health Support Chatbot</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 150vh;
+            font-family: sans-serif;
+            background: url(images/jkj.jpg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .navbar {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 999;
+        }
+        .glass {
+            width: 500px;
+            height: 550px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 100px;
+            color: #000;
+            border-radius: 70px;
+            backdrop-filter: blur(50px);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 10px 10px 10px rgba(45, 55, 68, 0.3);
+            line-height: 1.5;
+            text-align: center;
+        }
+        .glass h1 {
+            font-size: 1.5rem;
+        }
+        .glass h2 {
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+        .input {
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+            margin-top: 40px;
+        }
+        .input input {
+            width: 100%;
+            height: 70px;
+            border: none;
+            padding-left: 30px;
+            font-size: 1.5rem;
+            border-radius: 20px;
+            outline: none;
+        }
+        .glass p {
+            font-size: 1.6rem;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body data-mobile-nav-style="classic">
+    <header>
+        <nav class="navbar navbar-expand-lg header-light bg-white">
+            <div class="container-fluid justify-content-center">
+                <div class="col-auto col-lg-2 me-lg-0 me-auto">
+                    <a class="navbar-brand" href="index.html">
+                        <img alt class="default-logo" data-at2x="images/demo-medical-logo-black@2x.png" src="images/demo-medical-logo-black.png">
+                    </a>
+                </div>
+                <div class="col-auto col-lg-8 menu-order position-static">
+                    <button aria-controls="navbarNav" aria-label="Toggle navigation" class="navbar-toggler float-start"
+                            data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
+                        <span class="navbar-toggler-line"></span>
+                        <span class="navbar-toggler-line"></span>
+                        <span class="navbar-toggler-line"></span>
+                        <span class="navbar-toggler-line"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="demo-medical-about.html">About</a></li>
+                            <li class="nav-item"><a class="nav-link" href="demo-medical-treatments.html">Therapies</a></li>
+                            <li class="nav-item"><a class="nav-link" href="demo-medical-doctors.html">Therapists</a></li>
+                            <li class="nav-item"><a class="nav-link" href="demo-medical-timetable.html">Schedule</a></li>
+                            <li class="nav-item"><a class="nav-link" href="demo-medical-contact.html">Contact</a></li>
+                            <li class="nav-item"><a class="nav-link" href="chatbot.html">Chatbot</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="glass">
+        <h1>Mental Health Support Chatbot</h1>
+        <h2>I'm here to listen and help.</h2>
+        <div class="input">
+            <input
+                type="text"
+                id="userBox"
+                onkeydown="if(event.keyCode == 13){ talk()}"
+                placeholder="Type your thoughts..."
+            />
+        </div>
+        <p id="chatLog">Let's talk...</p>
+    </div>
+
+    <script>
+        async function getMistralResponse(input) {
+            try {
+                const response = await fetch('YOUR_MISTRAL_API_ENDPOINT', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include any required authentication headers here
+                    },
+                    body: JSON.stringify({
+                        model: "mistral-large-latest",
+                        messages: [
+                            { role: "system", content: "Act as a supportive mental health chatbot. Respond with empathy and understanding, guiding users towards positive thinking and self-care." },
+                            { role: "user", content: input }
+                        ],
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                return Hello! Here’s my response:\n\n${data.choices[0].message.content}\n\nRemember, it’s always okay to reach out for help!;
+            } catch (error) {
+                console.error("Error getting Mistral response:", error);
+                return "I’m here for you. If there's an issue, please feel free to share your thoughts!";
+            }
+        }
+
+        function talk() {
+            var userMessage = document.getElementById("userBox").value.toLowerCase();
+            var chatLog = document.getElementById("chatLog");
+
+            // Predefined responses
+            var responses = {
+                "i am feeling sad": "I'm so sorry you're feeling this way. Do you want to talk more about what's been on your mind?",
+                "i feel alone": "I'm here for you. It’s okay to feel this way. You're not alone.",
+                "i feel hopeless": "It sounds really hard. But please remember, things can get better, even when they seem impossible right now.",
+                "i don't want to live": "I'm really sorry you're feeling this way, and it’s important to talk to someone who can help. Do you have someone you trust to reach out to?",
+                "thank you": "I'm glad I can be here for you. You deserve to feel supported.",
+                "i need help": "It's brave of you to ask for help. Talking to someone you trust or a mental health professional can make a big difference.",
+                "i don't know what to do": "It's okay to not have all the answers right now. Taking small steps, like sharing your feelings, is already a good start."
+            };
+
+            var defaultResponse = "I'm here with you. It’s okay to express how you're feeling.";
+            var botMessage = responses[userMessage] || defaultResponse;
+
+            // Update chat log with the bot's message
+            chatLog.innerHTML = botMessage;
+
+            // Clear the input box
+            document.getElementById("userBox").value = '';
+
+            // If the user message isn't recognized, call the Mistral API
+            if (!responses[userMessage]) {
+                getMistralResponse(userMessage).then(response => {
+                    chatLog.innerHTML = response;
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

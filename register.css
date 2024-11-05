@@ -1,0 +1,128 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e9f8f8; /* Background color from the image */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.bg-light-turquoise-blue {
+    background-color: #e9f8f8;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.border-radius-8px {
+    border-radius: 8px;
+}
+
+.form-control {
+    border: 1px solid #e5e5e5;
+    padding: 15px; /* Increased padding for height */
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    height: 50px; /* Set a specific height for input fields */
+}
+
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+select, 
+textarea {
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+    height: 150px; /* Set a specific height for text area */
+}
+
+button {
+    background-color: #00bcd4; /* Button color */
+    color: #fff;
+    padding: 15px 20px; /* Increased padding for larger button */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0097a7;
+}
+
+h2 {
+    color: #333;
+}
+
+.footer-top {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+}
+
+footer a {
+    color: #00bcd4;
+}
+
+.bg-image {
+    background-image: url('demo-medical-hero-banner-bg.png'); /* Replace with actual image path */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    padding: 50px;
+}
+
+/* Add spacing between form fields */
+.row {
+    margin-bottom: 20px; /* Increase bottom margin for spacing */
+}
+.login-form {
+    max-width: 400px; /* Set a max width for the form */
+    margin: 0 auto; /* Center the form */
+}
+
+.btn {
+    width: 100%; /* Make buttons take the full width */
+    padding: 15px; /* Add padding for a larger button */
+    border-radius: 4px; /* Button border radius */
+}
+
+.btn-base-color {
+    background-color: #00bcd4; /* Primary button color */
+    color: #fff;
+}
+
+.btn-base-color:hover {
+    background-color: #0097a7; /* Hover effect */
+}
+
+.btn-secondary {
+    background-color: #f5f5f5; /* Secondary button color */
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0; /* Hover effect */
+}
+
+.btn-link {
+    background: none; /* Remove background */
+    color: #00bcd4; /* Link color */
+    text-decoration: underline; /* Underline for links */
+}
+
+.btn-link:hover {
+    color: #0097a7; /* Hover effect */
+}
